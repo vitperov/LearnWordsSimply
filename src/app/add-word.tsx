@@ -6,7 +6,11 @@
  */
 
 import { useState } from "react";
-import { Alert, Pressable, Text, TextInput, View } from "react-native";
+import { Alert, StyleSheet, Text, TextInput } from "react-native";
+
+import { AppButton } from "@/components/app-button";
+import { Screen } from "@/components/screen";
+import { colors } from "@/theme";
 
 import { clearStats, makeWordRecord } from "@/core/word-record.ts";
 import { t } from "@/i18n";
@@ -48,22 +52,43 @@ export default function AddWordScreen() {
   };
 
   return (
-    <View>
-      <Text>{t("add_dictionary")}</Text>
+    <Screen style={{ paddingTop: 10 }}>
+      <Text style={styles.label}>{t("foreign_word")}</Text>
       <TextInput
+        style={styles.input}
         value={word}
         onChangeText={setWord}
         placeholder={t("foreign_word")}
+        placeholderTextColor={colors.hint}
       />
+      <Text style={styles.label}>{t("translation")}</Text>
       <TextInput
+        style={styles.input}
         value={translation}
         onChangeText={setTranslation}
         placeholder={t("translation")}
+        placeholderTextColor={colors.hint}
       />
-      {error && <Text>{error}</Text>}
-      <Pressable onPress={add}>
-        <Text>{t("menu_Add")}</Text>
-      </Pressable>
-    </View>
+      {error && <Text style={styles.error}>{error}</Text>}
+      <AppButton
+        label={t("add_dictionary")}
+        onPress={add}
+        style={{ marginVertical: 10, marginHorizontal: 30 }}
+      />
+    </Screen>
   );
 }
+
+const styles = StyleSheet.create({
+  label: { color: colors.text, marginHorizontal: 10, marginTop: 10 },
+  input: {
+    color: colors.text,
+    margin: 10,
+    paddingVertical: 8,
+    paddingHorizontal: 4,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.grayText,
+    fontSize: 16,
+  },
+  error: { color: colors.error, marginHorizontal: 10 },
+});

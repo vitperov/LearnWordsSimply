@@ -4,7 +4,10 @@
  */
 
 import { useLocalSearchParams } from "expo-router";
-import { ScrollView, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
+
+import { Screen } from "@/components/screen";
+import { colors } from "@/theme";
 
 import { getTwProgress, getWtProgress } from "@/core/word-record.ts";
 import { t } from "@/i18n";
@@ -20,18 +23,31 @@ export default function ShowWordsScreen() {
   return (
     // scrollable like the original's activity_show_words.xml — the whole
     // table stays reachable regardless of list length
-    <ScrollView>
-      <Text>{t("title_activity_show_words")}</Text>
+    <Screen scroll>
+      <View style={styles.row}>
+        <Text style={[styles.cell, styles.wide, styles.header]}>{t("word")}</Text>
+        <Text style={[styles.cell, styles.wide, styles.header]}>{t("translation")}</Text>
+        <Text style={[styles.cell, styles.header]}>{t("shown")}</Text>
+        <Text style={[styles.cell, styles.header]}>{t("progress_wt")}</Text>
+        <Text style={[styles.cell, styles.header]}>{t("progress_tw")}</Text>
+      </View>
       {records.map((record, index) => (
-        <View key={`${record.word}-${index}`}>
-          <Text>{record.word}</Text>
-          <Text>{record.translation}</Text>
+        <View key={`${record.word}-${index}`} style={styles.row}>
+          <Text style={[styles.cell, styles.wide]}>{record.word}</Text>
+          <Text style={[styles.cell, styles.wide]}>{record.translation}</Text>
           {/* W:T counts, then the two direction progresses */}
-          <Text>{`${record.wCount}:${record.tCount}`}</Text>
-          <Text>{`${getWtProgress(record)}%`}</Text>
-          <Text>{`${getTwProgress(record)}%`}</Text>
+          <Text style={styles.cell}>{`${record.wCount}:${record.tCount}`}</Text>
+          <Text style={styles.cell}>{`${getWtProgress(record)}%`}</Text>
+          <Text style={styles.cell}>{`${getTwProgress(record)}%`}</Text>
         </View>
       ))}
-    </ScrollView>
+    </Screen>
   );
 }
+
+const styles = StyleSheet.create({
+  row: { flexDirection: "row", backgroundColor: colors.text },
+  cell: { flex: 1, color: colors.text, margin: 1, padding: 2, backgroundColor: colors.background },
+  wide: { flex: 2 },
+  header: { backgroundColor: colors.tableHeader },
+});

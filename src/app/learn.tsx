@@ -7,7 +7,11 @@
 
 import { useLocalSearchParams } from "expo-router";
 import { useCallback, useRef, useState } from "react";
-import { Alert, Pressable, Text, View } from "react-native";
+import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
+
+import { AppButton } from "@/components/app-button";
+import { Screen } from "@/components/screen";
+import { colors } from "@/theme";
 
 import { useDictionaries } from "./_layout.tsx";
 import type { Strategy } from "@/core/learning-session.ts";
@@ -183,55 +187,82 @@ export default function LearnScreen() {
   if (!draw) {
     // "No words" state — options hidden
     return (
-      <View>
-        <Text>{t("no_words")}</Text>
-      </View>
+      <Screen style={{ justifyContent: "center", alignItems: "center" }}>
+        <Text style={styles.large}>{t("no_words")}</Text>
+      </Screen>
     );
   }
 
   return (
-    <View>
-      {/* header: dictionary label, word count, progress */}
-      <Text>
-        {t("current_dict").replace("%s", draw.dict === "learn" ? t("status_dict_new") : t("status_dict_repeat"))}
-      </Text>
-      <Text>{t("words_in_dict").replace("%1$d", String(session.activeDictSize()))}</Text>
-      <Text>
-        {t("word_progress")
-          .replace("%1$d", String(getProgress(draw.record)))
-          .replace("%2$s", draw.direction ? draw.record.wtHistory : draw.record.twHistory)
-          .replace("%%", "%")}
-      </Text>
-
-      {/* the word / the revealed answer */}
-      <Text>{draw.direction ? t("progress_wt").split("\n")[0] : t("progress_tw").split("\n")[0]}</Text>
-      <Text>{getWord(draw.record)}</Text>
-      {revealed && <Text>{getAnswer(draw.record)}</Text>}
-
-      {!revealed ? (
-        <Pressable onPress={() => setRevealed(true)}>
-          <Text>{t("shown")}</Text>
-        </Pressable>
-      ) : (
-        <View>
-          <Pressable onPress={() => answer(true)}>
-            <Text>{t("right")}</Text>
-          </Pressable>
-          <Pressable onPress={() => answer(false)}>
-            <Text>{t("mistake")}</Text>
-          </Pressable>
-        </View>
-      )}
-
-      {/* options menu: manual move/delete over the same primitives */}
-      <View>
-        <Pressable onPress={confirmMove}>
-          <Text>{t("title_move_word")}</Text>
-        </Pressable>
-        <Pressable onPress={confirmDelete}>
-          <Text>{t("title_delete_word")}</Text>
-        </Pressable>
+    <Screen>
+      {/* the word being asked */}
+      <View style={[styles.center, { flex: 5 }]}>
+        <Text style={styles.small}>
+          {draw.direction ? t("progress_wt").split("\n")[0] : t("progress_tw").split("\n")[0]}
+        </Text>
+        <Text style={styles.large}>{getWord(draw.record)}</Text>
       </View>
-    </View>
+
+      {/* the answer box: tap to reveal */}
+      <Pressable
+        onPress={() => setRevealed(true)}
+        style={[styles.center, styles.answer]}
+      >
+        <Text style={styles.large}>{revealed ? getAnswer(draw.record) : "?"}</Text>
+      </Pressable>
+
+      {/* Right / Mistake (only once the answer is shown) */}
+      <View style={styles.answers}>
+        {revealed && (
+          <>
+            <AppButton
+              label={t("right")}
+              kind="green"
+              onPress={() => answer(true)}
+              style={styles.answerButton}
+            />
+            <AppButton
+              label={t("mistake")}
+              kind="red"
+              onPress={() => answer(false)}
+              style={styles.answerButton}
+            />
+          </>
+        )}
+      </View>
+
+      {/* header info + options menu: manual move/delete over the same primitives */}
+      <View style={styles.info}>
+        <Text style={styles.medium}>
+          {t("word_progress")
+            .replace("%1$d", String(getProgress(draw.record)))
+            .replace("%2$s", draw.direction ? draw.record.wtHistory : draw.record.twHistory)
+            .replace("%%", "%")}
+        </Text>
+        <Text style={styles.medium}>
+          {t("current_dict").replace("%s", draw.dict === "learn" ? t("status_dict_new") : t("status_dict_repeat"))}
+        </Text>
+        <Text style={styles.medium}>
+          {t("words_in_dict").replace("%1$d", String(session.activeDictSize()))}
+        </Text>
+        <View style={styles.options}>
+          <AppButton label={t("title_move_word")} kind="gray" onPress={confirmMove} style={styles.optionButton} />
+          <AppButton label={t("title_delete_word")} kind="gray" onPress={confirmDelete} style={styles.optionButton} />
+        </View>
+      </View>
+    </Screen>
   );
 }
+
+const styles = StyleSheet.create({
+  center: { alignItems: "center", justifyContent: "center" },
+  large: { color: colors.text, fontSize: 24, textAlign: "center" },
+  medium: { color: colors.text, fontSize: 16, textAlign: "center" },
+  small: { color: colors.grayText, fontSize: 14, marginBottom: 6 },
+  answer: { flex: 4, margin: 25, backgroundColor: colors.panel },
+  answers: { flex: 5, flexDirection: "row" },
+  answerButton: { flex: 1, margin: 15 },
+  info: { flex: 8, margin: 20 },
+  options: { flexDirection: "row", marginTop: 12 },
+  optionButton: { flex: 1, marginHorizontal: 5 },
+});

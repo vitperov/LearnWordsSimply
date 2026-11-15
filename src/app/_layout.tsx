@@ -6,12 +6,15 @@
 
 import { Stack } from "expo-router";
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
-import { Alert, Text, View } from "react-native";
+import { Alert, Text } from "react-native";
 
 import { Dictionary } from "@/core/dictionary.ts";
 import type { FileStore } from "@/core/file-store.ts";
+import { Screen } from "@/components/screen";
+import { WebDevFrame } from "@/components/web-dev-frame";
 import { t } from "@/i18n";
 import { ExpoFileStore } from "@/storage/expo-file-store.ts";
+import { colors } from "@/theme";
 
 interface DictionariesContextValue {
   learn: Dictionary;
@@ -74,9 +77,11 @@ export function DictionariesProvider({ children }: { children: ReactNode }) {
   if (!ready || !learn || !repeat) {
     // loading screen while both dictionaries load
     return (
-      <View>
-        <Text>{t("app_name")}</Text>
-      </View>
+      <WebDevFrame>
+        <Screen style={{ justifyContent: "center", alignItems: "center" }}>
+          <Text style={{ color: colors.text, fontSize: 22 }}>{t("app_name")}</Text>
+        </Screen>
+      </WebDevFrame>
     );
   }
 
@@ -90,7 +95,14 @@ export function DictionariesProvider({ children }: { children: ReactNode }) {
 export default function RootLayout() {
   return (
     <DictionariesProvider>
-      <Stack>
+      <WebDevFrame>
+      <Stack
+        screenOptions={{
+          headerStyle: { backgroundColor: colors.background },
+          headerTintColor: colors.text,
+          contentStyle: { backgroundColor: colors.background },
+        }}
+      >
         <Stack.Screen name="index" options={{ title: t("app_name") }} />
         <Stack.Screen name="method" options={{ title: t("menu_Start") }} />
         <Stack.Screen name="dictionary" options={{ title: t("title_activity_choose_dictionary") }} />
@@ -100,6 +112,7 @@ export default function RootLayout() {
         <Stack.Screen name="import" options={{ title: t("title_activity_import_words") }} />
         <Stack.Screen name="help" options={{ title: t("title_activity_help") }} />
       </Stack>
+      </WebDevFrame>
     </DictionariesProvider>
   );
 }

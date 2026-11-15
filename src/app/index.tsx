@@ -3,23 +3,20 @@
  */
 
 import { useRouter } from "expo-router";
-import { Pressable, Text, View } from "react-native";
-
+import { AppButton } from "@/components/app-button";
+import { Screen } from "@/components/screen";
 import { t } from "@/i18n";
 
+/** Menu buttons share the free height equally (original: layout_weight 1). */
 function MenuItem({ label, onPress }: { label: string; onPress: () => void }) {
-  return (
-    <Pressable onPress={onPress}>
-      <Text>{label}</Text>
-    </Pressable>
-  );
+  return <AppButton label={label} onPress={onPress} size="menu" style={{ flex: 1, margin: 10 }} />;
 }
 
 export default function MainMenuScreen() {
   const router = useRouter();
 
   return (
-    <View>
+    <Screen style={{ padding: 30 }}>
       <MenuItem label={t("menu_Start")} onPress={() => router.push("/method")} />
       <MenuItem label={t("menu_Add")} onPress={() => router.push("/add-word")} />
       <MenuItem
@@ -31,6 +28,6 @@ export default function MainMenuScreen() {
         onPress={() => router.push("/dictionary?next=import")}
       />
       <MenuItem label={t("menu_Help")} onPress={() => router.push("/help")} />
-    </View>
+    </Screen>
   );
 }

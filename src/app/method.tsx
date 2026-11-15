@@ -4,7 +4,11 @@
  */
 
 import { useRouter } from "expo-router";
-import { Pressable, Text, View } from "react-native";
+import { Text } from "react-native";
+
+import { AppButton } from "@/components/app-button";
+import { Screen } from "@/components/screen";
+import { colors } from "@/theme";
 
 import type { Strategy } from "@/core/learning-session.ts";
 import { t } from "@/i18n";
@@ -23,13 +27,18 @@ export default function MethodScreen() {
   };
 
   return (
-    <View>
-      <Text>{t("menu_Start")}</Text>
+    <Screen>
+      <Text style={{ color: colors.text, fontSize: 18, textAlign: "center", margin: 25 }}>
+        {t("menu_Start")}
+      </Text>
       {METHODS.map(({ strategy, labelKey }) => (
-        <Pressable key={strategy} onPress={() => choose(strategy)}>
-          <Text>{t(labelKey)}</Text>
-        </Pressable>
+        <AppButton
+          key={strategy}
+          label={t(labelKey)}
+          onPress={() => choose(strategy)}
+          style={{ marginTop: 10, marginHorizontal: 60 }}
+        />
       ))}
-    </View>
+    </Screen>
   );
 }

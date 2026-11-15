@@ -6,7 +6,11 @@
 
 import { useLocalSearchParams } from "expo-router";
 import { useState } from "react";
-import { Alert, Pressable, Text, View } from "react-native";
+import { Alert, Text } from "react-native";
+
+import { AppButton } from "@/components/app-button";
+import { Screen } from "@/components/screen";
+import { colors } from "@/theme";
 
 import { t } from "@/i18n";
 import { importFromDocument } from "@/scripts/document-import.ts";
@@ -34,12 +38,15 @@ export default function ImportScreen() {
   };
 
   return (
-    <View>
-      <Text>{t("title_activity_import_words")}</Text>
-      <Pressable onPress={pick}>
-        <Text>{t("menu_import_from_file")}</Text>
-      </Pressable>
-      {message && <Text>{message}</Text>}
-    </View>
+    <Screen>
+      <Text style={{ color: colors.text, fontSize: 18, textAlign: "center", margin: 25 }}>
+        {message ?? t("choose_dictionary")}
+      </Text>
+      <AppButton
+        label={t("menu_import_from_file")}
+        onPress={pick}
+        style={{ marginTop: 10, marginHorizontal: 60 }}
+      />
+    </Screen>
   );
 }

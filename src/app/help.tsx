@@ -4,12 +4,12 @@
  */
 
 import { useEffect, useState } from "react";
-import { Text, View } from "react-native";
+import { Screen } from "@/components/screen";
 import { Asset } from "expo-asset";
 import { File } from "expo-file-system";
 import { WebView } from "react-native-webview";
 
-import { t, useLocale } from "@/i18n";
+import { useLocale } from "@/i18n";
 
 const HELP_ASSETS = {
   "help-en.html": require("../../assets/help/help-en.html"),
@@ -48,9 +48,8 @@ export default function HelpScreen() {
   }, [assetModule]);
 
   return (
-    <View style={{ flex: 1 }}>
-      <Text>{t("title_activity_help")}</Text>
+    <Screen>
       {html !== null && <WebView source={{ html }} style={{ flex: 1 }} />}
-    </View>
+    </Screen>
   );
 }

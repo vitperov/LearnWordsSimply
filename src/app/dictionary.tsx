@@ -4,7 +4,11 @@
  */
 
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { Pressable, Text, View } from "react-native";
+import { Text } from "react-native";
+
+import { AppButton } from "@/components/app-button";
+import { Screen } from "@/components/screen";
+import { colors } from "@/theme";
 
 import { t } from "@/i18n";
 
@@ -35,13 +39,18 @@ export default function DictionaryScreen() {
   };
 
   return (
-    <View>
-      <Text>{t("choose_dictionary")}</Text>
+    <Screen>
+      <Text style={{ color: colors.text, fontSize: 18, textAlign: "center", margin: 25 }}>
+        {t("choose_dictionary")}
+      </Text>
       {DICT_CHOICES.map(({ dict, labelKey }) => (
-        <Pressable key={dict} onPress={() => choose(dict)}>
-          <Text>{t(labelKey)}</Text>
-        </Pressable>
+        <AppButton
+          key={dict}
+          label={t(labelKey)}
+          onPress={() => choose(dict)}
+          style={{ marginTop: 10, marginHorizontal: 60 }}
+        />
       ))}
-    </View>
+    </Screen>
   );
 }

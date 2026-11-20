@@ -28,6 +28,18 @@ it for good.
 You can study only new words, only repeat old ones, or mix them: mostly
 new words with an old one now and then.
 
+## Screenshots
+
+<p>
+  <img src="docs/screenshots/main-screen.png" alt="Main screen" width="240">
+  &nbsp;
+  <img src="docs/screenshots/training-screen.png" alt="Training screen with the answer revealed" width="240">
+</p>
+
+The main screen leads to the dictionaries and training modes; on the
+training screen you see one side of a card, recall the other, reveal the
+answer and mark whether you got it right.
+
 ## Development
 
 Requires Node 22.18 or newer (the tests run TypeScript directly).
